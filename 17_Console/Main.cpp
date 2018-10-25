@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <Gl/glew.h>//OpenGL的头文件
 #include <Gl/glut.h>//创建OpenGL窗口相关函数的头文件
+
 using namespace std;
 /*
 HMODULE hDll = LoadLibraryA("..\\Debug\\ServerDll.dll");
@@ -19,87 +20,10 @@ else
 FreeLibrary(hDll);
 hDll = NULL;
 */
-//位图头文件14
-struct SIZEOF1
-{
-	WORD buf_int; //记录文件类型 0x4d42
-	DWORD buf_size; //记录位图文件的大小
-	//WORD k1; //保留的，填0
-	//WORD k2; //保留的，填0
-	//WORD buf_bit; //颜色数据和文件头的偏移字节数
-}IMAGE0;
-//位图信息头40
-struct SIZEOF2
-{
-	//DWORD bisize; //存自身结构体的总字节
-	LONG biWidth; //像素的宽
-	LONG biHeight; //像素的高
-	//WORD biweizhi1; //24位图填1
-	WORD biSHENDU; //位深度 填0x18
-	//DWORD biyasuo; //有没有被压缩，没有填0
-	DWORD bisizeimage; //图片的总字节数
-	//LONG k3; //0默认
-	//LONG k4; //0默认
-	//DWORD k5; //有多少颜色被使用0
-	 //DWORD k6;//有多少重要的颜色0
-}IMAGE_MAX;
 
-void Bmp(unsigned char **MAX, LONG &W, LONG &H, int &I)
-{
-	FILE *pf = NULL;
-	fopen_s(&pf, "nazui.bmp", "rb");
-	if (pf)
-	{
-		//取一波文件的大小
-		int max = 0;
-		fseek(pf, 0, SEEK_END); //文件末尾
-		max = ftell(pf); //大小取出赋值
-		rewind(pf); //重新把文件指向开始
-		//取文件的大小
-		fread(&IMAGE0.buf_size, 4, 1, pf);
-		//分配位图的存储空间
-		unsigned char *bmp = new unsigned char[max];
-		rewind(pf); //重新指向开头
-		fread(bmp, 1, max, pf); //二进制信息考到bmp里
-		fclose(pf); //关闭文件
-		//图片的宽高
-		IMAGE_MAX.biWidth = *((int*)(bmp + 18)); //位图的宽
-		IMAGE_MAX.biHeight = *((int*)(bmp + 22)); //位图的高
-		//位图颜色的数据
-		IMAGE_MAX.bisizeimage = *((DWORD*)(bmp + 34)); //存储颜色数据的四个字节
-		int i = IMAGE_MAX.bisizeimage / IMAGE_MAX.biHeight; //一行的字节数
-
-		//for (int j = IMAGE_MAX.biHeight - 1; j >= 0; j--)
-		//{
-		//	unsigned char *Hcolor = bmp + 54 + j * i;
-		//	for (int k = 0; k < IMAGE_MAX.biWidth; k++)
-		//	{
-		//		unsigned char *Wcolor = Hcolor + k * 3;
-		//		//注意次数 决定像素的宽和高这么多次
-		//		Wcolor[0] = Wcolor[1]; //R
-		//		Wcolor[1] = Wcolor[1]; //G
-		//		Wcolor[2] = Wcolor[1]; //B
-		//	}
-		//}
-
-		*MAX = new unsigned char[max];
-		memcpy_s(*MAX, max, bmp, max);
-		W = IMAGE_MAX.biWidth;
-		H = IMAGE_MAX.biHeight;
-		I = i;
-
-		delete[] bmp;
-		bmp = NULL;
-	}
-}
 
 void Display()
 {
-	unsigned char *MAX = NULL;
-	LONG W = 0;
-	LONG H = 0;
-	int I = 0;
-	Bmp(&MAX, W, H, I);
 	//调用设置的颜色来清除上一次的颜色数据
 	glClear(GL_COLOR_BUFFER_BIT);
 	//中间的就是用于绘制的部分在此书写代码
@@ -118,30 +42,12 @@ void Display()
 
 
 	glBegin(GL_POINTS);
-	for (int j = H - 1; j >= 0; j--)
-	{
-		unsigned char *Hcolor = MAX + 54 + j * I;
-		for (int k = 0; k < W; k++)
-		{
-			unsigned char *Wcolor = Hcolor + k * 3;
-			//注意次数 决定像素的宽和高这么多次
-			//Wcolor[0] = Wcolor[0]; //R
-			//Wcolor[1] = Wcolor[1]; //G
-			//Wcolor[2] = Wcolor[2]; //B
 
 
-			glColor3ub(Wcolor[2],Wcolor[1],Wcolor[0]);
-			glVertex2f(k - W / 2.0f, j - H / 2.0f);
-
-
-		}
-	}
 
 	glEnd();
 	//把缓冲中的数据写出
 	glFlush();
-	delete[] MAX;
-	MAX = NULL;
 }
 //传入的是改变后的窗口大小的宽高
 void ReShape(int width, int height)
@@ -151,7 +57,8 @@ void ReShape(int width, int height)
 	glLoadIdentity();//将投影矩阵单位化
 	glViewport(0, 0, width, height);
 	//gluPerspective();//设置透视投影
-	gluOrtho2D(-width / 2, width / 2, -height / 2, height / 2);//设置正交投影
+	//gluOrtho2D(-width / 2, width / 2, -height / 2, height / 2);//设置正交投影
+	gluOrtho2D(0, width, 0, height); //设置正交投影
 }
 
 void Keyboard(unsigned char key, int x, int y)
@@ -172,42 +79,79 @@ void SpecialUp(int key, int x, int y)
 	cout << "你放开了:" << key << endl;
 	//GLUT_KEY_DOWN
 }
+
 class InitOpenGL
 {
 public:
-	//初始化glut库
+	//初始化_glut库
 	void Init(int *argc, char **argv)
 	{
 		glutInit(argc, argv);
 	}
-	//初始化OpenGL的显示模式
+	//初始化_OpenGL的显示模式
 	void InitMode(unsigned int Define)
 	{
 		glutInitDisplayMode(Define);
 	}
-	//设置窗口客户区相对于桌面左上角的位置
+	//初始化_设置窗口客户区相对于桌面左上角的位置
 	void InitWinPos(int W, int H)
 	{
 		glutInitWindowPosition(W, H);
 	}
-	//设置窗口的像素宽高(也就是客户区的宽高)
+	//初始化_设置窗口的像素宽高(也就是客户区的宽高)
 	void InitWindSize(int Size_W, int Size_H)
 	{
 		glutInitWindowSize(Size_W, Size_H);
 	}
-	//创建窗口，填写窗口标题栏的文字
+	//初始化_创建窗口，填写窗口标题栏的文字
 	void CreateWindows(const char *WindName)
 	{
 		glutCreateWindow(WindName);
 	}
-	//设置的用于清除上一次绘制的颜色数据的颜色（相当于背景颜色）
-	void ClearColor(float R, float G, float B, float Alpha)
+	//初始化_设置的用于清除上一次绘制的颜色数据的颜色（相当于背景颜色）
+	void ClearColor(float R, float G, float B, float Alpha)//Alpha 为透明度
 	{
 		glClearColor(R, G, B, Alpha);
 	}
+
+	//初始化_设置绘制回调函数
+	void SerDrawCallback(void (*Func))
+	{
+		glutDisplayFunc(Display);
+	}
+	//初始化_当窗口大小和激活状态改变的时候会调用的函数
+	void WindSizeOractivation_Reshape(void (*Func)(int Width,int Height))
+	{
+		glutReshapeFunc(Func);
+	}
+
+	//普通键盘回调函数
+	void OrdinaryKeyDown(void (*KeyDown)(unsigned char Key,int Mouse_X,int Mouse_Y))
+	{
+		glutKeyboardFunc(KeyDown);
+	}
+	void OrdinaryKeyUp(void(*KeyUp)(unsigned char Key, int Mouse_X, int Mouse_Y))
+	{
+		glutKeyboardUpFunc(KeyUp);
+	}
+	//功能键回调函数
+	void SpecialKeyDown(void(*KeyDown)(int Key, int Mouse_X, int Mouse_Y))
+	{
+		glutSpecialFunc(KeyDown);
+
+	}
+	void SpecialKeyUp(void(*KeyUp)(int Key, int Mouse_X, int Mouse_Y))
+	{
+		glutSpecialUpFunc(KeyUp);
+	}
+
+
+	//初始化_窗口循环
+	void MainWindLoop()
+	{
+		glutMainLoop();
+	}
 };
-
-
 
 int main(int argc, char **argv)
 {
@@ -218,25 +162,22 @@ int main(int argc, char **argv)
 	Obj.Init(&argc, argv);
 	Obj.InitMode(GLUT_SINGLE | GLUT_RGBA);
 	Obj.InitWinPos(10, 10);
-	Obj.InitWindSize(500, 375);
+	Obj.InitWindSize(600, 500);
 	Obj.CreateWindows("OpenGL程序");
 	Obj.ClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-	//设置OpenGL绘制回调函数
-	glutDisplayFunc(Display);
-	//当窗口大小和激活状态改变的时候会调用的函数
-	glutReshapeFunc(ReShape);
+	Obj.SerDrawCallback(Display);
+	Obj.WindSizeOractivation_Reshape(ReShape);
 
-	////普通键盘回调函数
-	//glutKeyboardFunc(Keyboard);
-	//glutKeyboardUpFunc(KeyboardUp);
-	////功能键回调函数
-	//glutSpecialFunc(Special);
-	//glutSpecialUpFunc(SpecialUp);
+	Obj.OrdinaryKeyDown(Keyboard);
+	Obj.OrdinaryKeyUp(KeyboardUp);
+	Obj.SpecialKeyDown(Special);
+	Obj.SpecialKeyUp(SpecialUp);
 
-	//glut窗口循环
-	glutMainLoop();
 
+
+
+	Obj.MainWindLoop();
 
 
 	system("pause");
