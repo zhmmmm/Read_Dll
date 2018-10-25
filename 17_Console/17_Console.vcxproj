@@ -140,10 +140,12 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="OpenGL_Class.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CMatrix3.h" />
     <ClInclude Include="CVerctor2D.h" />
+    <ClInclude Include="OpenGL_Class.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
