@@ -113,4 +113,5 @@ int CMyBass::GetData(string sName,void* buf)
 	{
 		return BASS_ChannelGetData(_findReturn->second,buf,2147483648);
 	}
+	return 0;
 }

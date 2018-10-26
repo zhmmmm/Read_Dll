@@ -16,6 +16,8 @@ typedef ML::iterator MLI;
 #define LOAD_MUSIC(_n) CMyBass::GetInstance()->LoadMusic(_n);
 #define LOAD_SOUND(_n) CMyBass::GetInstance()->LoadSound(_n);
 
+#define GOMUSIC CMyBass::GetInstance()
+
 class CMyBass
 {
 public:
@@ -23,7 +25,7 @@ public:
 	static CMyBass* GetInstance();
 	BOOL Init();
 	int LoadMusic(string musicPath,DWORD flags=BASS_SAMPLE_LOOP);//º”‘ÿ“Ù¿÷
-	int LoadSound(string soundPath,DWORD flags=BASS_SAMPLE_MONO);//º”‘ÿ…˘“Ù
+	int LoadSound(string soundPath,DWORD flags=BASS_SAMPLE_MONO);//º”‘ÿ“Ù–ß
 	BOOL PlaySound(string sName);//≤•∑≈“Ù–ß
 	BOOL PlayMusic(string sName,BOOL restart=TRUE);//≤•∑≈“Ù¿÷
 	int GetData(string sName,void* buf);
