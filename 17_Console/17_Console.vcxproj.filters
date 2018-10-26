@@ -21,6 +21,9 @@
     <ClCompile Include="OpenGL_Class.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="CMyBass.cpp">
+      <Filter>头文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CMatrix3.h">
@@ -30,6 +33,9 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="OpenGL_Class.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CMyBass.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
