@@ -108,10 +108,9 @@ void ReShape(int width, int height)
 	glLoadIdentity();//将投影矩阵单位化
 	glViewport(0, 0, width, height);
 	//gluPerspective();//设置透视投影
-	//gluOrtho2D(-width / 2, width / 2, -height / 2, height / 2);//设置正交投影
-	gluOrtho2D(0, width, 0, height); //设置正交投影
+	gluOrtho2D(-width / 2, width / 2, -height / 2, height / 2);//设置正交投影
+	//gluOrtho2D(0, width, 0, height); //设置正交投影
 }
-
 void Mouse_Down(int Button, int State, int Mouse_X, int Mouse_Y)
 {
 	std::cout << Button << " " << State << " " << Mouse_X << " " << Mouse_Y << std::endl;
