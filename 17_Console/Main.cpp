@@ -68,26 +68,6 @@ void ReShape(int width, int height)
 	//gluOrtho2D(0, width, 0, height); //设置正交投影
 	gluOrtho2D(0, width,0, height );//设置正交投影
 }
-void Mouse_Down(int Button, int State, int Mouse_X, int Mouse_Y)
-{
-	std::cout << Button << " " << State << " " << Mouse_X << " " << Mouse_Y << std::endl;
-}
-void Mouse_Move(int Mouse_X, int Mouse_Y)
-{
-	std::cout << "鼠标移动：" << Mouse_X << " " << Mouse_Y << std::endl;
-}
-void Mouse_Passive(int Mouse_X, int Mouse_Y)
-{
-	std::cout << "鼠标拖拽：" << Mouse_X << " " << Mouse_Y << std::endl;
-}
-void Timer(int ID)
-{
-	if (ID == 10086)
-	{
-		std::cout << "10086" << std::endl;
-		//glutTimerFunc(2000, Timer, 10086);
-	}
-}
 void Indle()
 {
 	int StartTime = GetTickCount();
@@ -98,14 +78,11 @@ void Indle()
 		glutPostRedisplay();//投递重新绘制的消息
 		LastTime = StartTime;
 	}
-	GOMUSIC->GetData("BLACK_RX.mp3", Buf);
+	GOMUSIC->GetData("China-X.mp3", Buf);
 }
-void SpecialKeyDown(int Key,int Mouse_X,int Mouse_Y)
+void OrdinaryKeyDown(unsigned char Key,int Mouse_X,int Mouse_Y)
 {
-	if (Key == 1)
-	{
-		exit(0);
-	}
+	if (Key == 13) { exit(0); }
 }
 int main(int argc, char **argv)
 {
@@ -119,11 +96,11 @@ int main(int argc, char **argv)
 
 	Obj.SerDrawCallback(Display);
 	Obj.WindSizeOractivation_Reshape(ReShape);
-	Obj.SpecialKeyDown(SpecialKeyDown);
+	Obj.OrdinaryKeyDown(OrdinaryKeyDown);
 
 	GOMUSIC->Init();
-	GOMUSIC->LoadMusic("BLACK_RX.mp3");
-	GOMUSIC->PlayMusic("BLACK_RX.mp3");
+	GOMUSIC->LoadMusic("China-X.mp3");
+	GOMUSIC->PlayMusic("China-X.mp3");
 
 
 
